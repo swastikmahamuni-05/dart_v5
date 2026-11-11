@@ -50,3 +50,8 @@ app.*.map.json
 levels_v*/
 levels_vs/
 
+# Node / Web dev server
+node_modules/
+dist/
+
+

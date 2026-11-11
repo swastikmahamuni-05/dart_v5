@@ -1,0 +1,22 @@
+{
+  "name": "water-tank-monitor",
+  "version": "1.0.0",
+  "description": "LEVELS - Smart Water Monitoring System (Web Simulator & Prototype)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node backend/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
+  }
+}
+
