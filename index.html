@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIT ADT University - Water Monitoring System</title>
+  <!-- Google Fonts Inter -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div id="app-host">
+    <!-- Left Presentation Info (Explaining Context to User/MIT Reviewers) -->
+    <div class="presentation-info">
+      <span class="tag-badge">ENTERPRISE IIOT PORTAL</span>
+      <h1>MIT <span>ADT University</span></h1>
+      <p>
+        A premium industrial IoT water monitoring and analytics platform designed for campus-wide water availability.
+        Simulated from physical ESP32 edge telemetry through AWS IoT Core.
+      </p>
+
+      <ul class="feature-list">
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          Flutter-Compatible Card Layouts
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          Real-time AWS IoT Telemetry Feed
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          SCADA-Inspired Animated Levels
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          Interactive Analytics & Reports
+        </li>
+      </ul>
+
+      <button class="toggle-layout-btn" id="layout-toggle-btn">
+        <i data-lucide="maximize-2"></i> Toggle Full Screen
+      </button>
+    </div>
+
+    <!-- Phone Simulator Frame -->
+    <div class="phone-frame">
+      <!-- Notch -->
+      <div class="dynamic-island"></div>
+
+      <!-- App Screen -->
+      <div class="screen-container">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <span class="status-bar-time" id="simulator-time">09:41</span>
+          <div class="status-bar-icons">
+            <i data-lucide="signal" style="width:14px;height:14px;"></i>
+            <i data-lucide="wifi" style="width:14px;height:14px;"></i>
+            <i data-lucide="battery" style="width:14px;height:14px;"></i>
+          </div>
+        </div>
+
+        <!-- SPLASH SCREEN -->
+        <div id="splash-screen">
+          <div class="splash-content">
+            <div class="logo-container">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+              </svg>
+            </div>
+            <h2 class="splash-title">Water Monitoring System</h2>
+            <p class="splash-subtitle">MIT ADT University</p>
+            <div class="spinner"></div>
+            
+          </div>
+        </div>
+
+        <!-- LOGIN SCREEN -->
+        <div id="login-screen">
+          <div class="login-card">
+            <div class="login-header-logo">
+              <i data-lucide="shield-check" style="width:30px;height:30px;"></i>
+            </div>
+            <h3>Enterprise Login</h3>
+            <p>MIT Campus Operations Identity</p>
+            <form id="login-form" onsubmit="event.preventDefault(); handleLogin();">
+              <div class="input-group">
+                <label for="login-email">OPERATOR EMAIL</label>
+                <input type="email" id="login-email" class="input-field" placeholder="operator@mit.edu"
+                  value="admin@mit.edu" required>
+              </div>
+              <div class="input-group password-group" style="position: relative; margin-bottom: 16px;">
+                <label for="login-pass">SECURE ACCESS PIN</label>
+                <div style="position: relative; width: 100%;">
+                  <input type="password" id="login-pass" class="input-field" value="123456" placeholder="Enter PIN"
+                    style="padding-right: 40px;" required>
+                  <button type="button" id="toggle-password-btn"
+                    style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0;">
+                    <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                  </button>
+                </div>
+              </div>
+              <button type="submit" class="login-btn">Authenticate Portal</button>
+              
+            </form>
+            <div class="login-footer">
+              Authorized personnel only. AWS Cloud Secured.
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN APP CONTENT SHELL -->
+        <div class="app-content">
+
+          <!-- TOP BAR (Persistent across navigation screens) -->
+          <div class="screen-header" id="global-header">
+            <div class="screen-title-section">
+              <p id="header-subtitle">Water Monitoring System</p>
+              <h2 id="header-title">MIT ADT University</h2>
+            </div>
+            <div class="header-actions">
+              <button class="icon-btn" id="bell-btn" onclick="toggleNotifications()">
+                <i data-lucide="bell"></i>
+                <span class="badge-count" id="notif-badge">2</span>
+              </button>
+              <div class="avatar" onclick="openProfile()">
+                <i data-lucide="user"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- DYNAMIC SCREEN: DASHBOARD -->
+          <div class="screen active" id="screen-dashboard">
+            <div class="scrollable-body">
+
+              <!-- System Overview KPIs -->
+              <div class="kpi-grid">
+                <div class="kpi-card kpi-total">
+                  <div class="kpi-icon"><i data-lucide="layers"></i></div>
+                  <div class="kpi-info">
+                    <h4>Total Tanks</h4>
+                    <p id="kpi-total-val">5</p>
+                  </div>
+                </div>
+                <div class="kpi-card kpi-online">
+                  <div class="kpi-icon"><i data-lucide="activity"></i></div>
+                  <div class="kpi-info">
+                    <h4>Online</h4>
+                    <p id="kpi-online-val">4</p>
+                  </div>
+                </div>
+                <div class="kpi-card kpi-offline">
+                  <div class="kpi-icon"><i data-lucide="wifi-off"></i></div>
+                  <div class="kpi-info">
+                    <h4>Offline</h4>
+                    <p id="kpi-offline-val">1</p>
+                  </div>
+                </div>
+                <div class="kpi-card kpi-alerts">
+                  <div class="kpi-icon"><i data-lucide="alert-triangle"></i></div>
+                  <div class="kpi-info">
+                    <h4>Active Alerts</h4>
+                    <p id="kpi-alerts-val">2</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Alert Command Center -->
+              <div class="alert-banner" id="dashboard-alert-banner">
+                <div class="alert-banner-header">
+                  <i data-lucide="alert-circle" style="width:16px;height:16px;"></i> Active System Incidents
+                </div>
+                <div class="alert-banner-list" id="dashboard-active-alerts">
+                  <!-- Dynamic Alerts Injection -->
+                  <div class="alert-banner-item">
+                    <span>TANK 4 - CRITICAL LEVEL</span>
+                    <span class="alert-badge badge-crit">12%</span>
+                  </div>
+                  <div class="alert-banner-item warning-alert">
+                    <span>TANK 3 - LEVEL WARNING</span>
+                    <span class="alert-badge badge-warn">45%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tank Monitoring Section -->
+              <div class="section-title">
+                <h3>Tank Monitoring</h3>
+                <span>Swipe left/right</span>
+              </div>
+              <div class="tank-carousel" id="tank-list-carousel">
+                <!-- Dynamically Populated Tank Cards -->
+              </div>
+
+
+
+              <!-- Campus Analytics Section -->
+              <div class="section-title">
+                <h3>Campus Analytics</h3>
+              </div>
+              <div class="dashboard-card">
+                <h4>Average Water Availability</h4>
+                <div class="chart-container">
+                  <canvas id="availChart"></canvas>
+                </div>
+              </div>
+              <div class="dashboard-card">
+                <h4>Daily Water Consumption</h4>
+                <div class="chart-container">
+                  <canvas id="consumptionChart"></canvas>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- DYNAMIC SCREEN: REPORTS -->
+          <div class="screen" id="screen-reports">
+            <div class="scrollable-body">
+
+              <div class="report-filters">
+                <div>
+                  <label class="tank-card-label" style="margin-bottom:4px;display:block;">SELECT TANK</label>
+                  <select class="filter-dropdown" id="report-tank-select" onchange="updateReportData()">
+                    <option value="0">TANK 1</option>
+                    <option value="1">TANK 2</option>
+                    <option value="2">TANK 3</option>
+                    <option value="3">TANK 4</option>
+                    <option value="4">TANK 5</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="tank-card-label" style="margin-bottom:4px;display:block;">TIMEFRAME</label>
+                  <select class="filter-dropdown" id="report-timeframe" onchange="updateReportData()">
+                    <option value="24h">Last 24 Hours</option>
+                    <option value="7d">Last 7 Days</option>
+                    <option value="30d">Last 30 Days</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="kpi-grid">
+                <div class="kpi-card" style="padding:10px;">
+                  <div class="kpi-info">
+                    <h4>Average Level</h4>
+                    <p id="report-avg-level">74.5%</p>
+                  </div>
+                </div>
+                <div class="kpi-card" style="padding:10px;">
+                  <div class="kpi-info">
+                    <h4>Max Recorded</h4>
+                    <p id="report-max-level">96.0%</p>
+                  </div>
+                </div>
+                <div class="kpi-card" style="padding:10px;">
+                  <div class="kpi-info">
+                    <h4>Min Recorded</h4>
+                    <p id="report-min-level">12.0%</p>
+                  </div>
+                </div>
+                <div class="kpi-card" style="padding:10px;">
+                  <div class="kpi-info">
+                    <h4>Total Usage</h4>
+                    <p id="report-total-usage">8,450 L</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dashboard-card">
+                <h4>Water Level Trend (Area Analytics)</h4>
+                <div class="chart-container">
+                  <canvas id="reportLevelChart"></canvas>
+                </div>
+              </div>
+
+              <div class="dashboard-card">
+                <h4>Hourly Consumption (Liters)</h4>
+                <div class="chart-container">
+                  <canvas id="reportConsumptionChart"></canvas>
+                </div>
+              </div>
+
+              <div class="dashboard-card" style="text-align: center;">
+                <h4>Capacity Utilization Breakdown</h4>
+                <div class="chart-container" style="height: 180px; display:flex; justify-content:center;">
+                  <canvas id="reportDoughnutChart" style="max-height: 100%"></canvas>
+                </div>
+              </div>
+
+              <div class="dashboard-card">
+                <h4 style="margin-bottom:12px;">Detailed Stats Summary</h4>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">Hardware Device ID</span>
+                  <span class="hardware-spec-val" id="rep-hw-id">ESP32-NODE-001</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">AWS Connection Status</span>
+                  <span class="hardware-spec-val" style="color:var(--success)">CONNECTED</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">Battery Level</span>
+                  <span class="hardware-spec-val" id="rep-battery">3.82V</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">RSSI Signal Strength</span>
+                  <span class="hardware-spec-val" id="rep-rssi">-68 dBm</span>
+                </div>
+              </div>
+
+              <!-- AWS IoT Live Telemetry Feed -->
+              <div class="section-title" style="margin-top:20px;">
+                <h3>AWS IoT Telemetry Pipeline</h3>
+                <span>Topic: mit/utility/telemetry</span>
+              </div>
+              <div class="console-card" id="iot-console" style="margin-bottom:20px;">
+                <!-- Dynamically scrolling logs -->
+              </div>
+
+              <div class="dashboard-card">
+                <h4>Generate & Export Logs</h4>
+                <div class="export-grid">
+                  <button class="export-btn" onclick="exportData('PDF')">
+                    <i data-lucide="file-text" style="width:16px;height:16px;"></i> PDF
+                  </button>
+                  <button class="export-btn" onclick="exportData('Excel')">
+                    <i data-lucide="sheet" style="width:16px;height:16px;"></i> Excel
+                  </button>
+                  <button class="export-btn" onclick="exportData('CSV')">
+                    <i data-lucide="file-spreadsheet" style="width:16px;height:16px;"></i> CSV
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- DYNAMIC SCREEN: ALERTS -->
+          <div class="screen" id="screen-alerts">
+            <div class="scrollable-body">
+
+              <div class="search-container">
+                <i data-lucide="search" class="search-icon" style="width:16px;height:16px;"></i>
+                <input type="text" class="search-input" id="alert-search" placeholder="Search alert log..."
+                  oninput="filterAlerts()">
+              </div>
+
+              <div class="chip-group">
+                <span class="chip active" onclick="setAlertFilter(this, 'all')">All Alarms</span>
+                <span class="chip" onclick="setAlertFilter(this, 'critical')">Critical</span>
+                <span class="chip" onclick="setAlertFilter(this, 'warning')">Warning</span>
+                <span class="chip" onclick="setAlertFilter(this, 'offline')">Offline</span>
+              </div>
+
+              <div class="section-title">
+                <h3 id="alert-list-header">Active Alarms (2)</h3>
+              </div>
+
+              <div class="alert-list" id="active-alert-list" style="margin-bottom: 24px;">
+                <!-- Dynamic active alerts card list -->
+              </div>
+
+              <div class="section-title">
+                <h3>Historical Event Logbook</h3>
+              </div>
+
+              <div class="alert-list" id="historical-alert-list">
+                <!-- Dynamic historic alerts log -->
+              </div>
+
+            </div>
+          </div>
+
+          <!-- DYNAMIC SCREEN: SETTINGS -->
+          <div class="screen" id="screen-settings">
+            <div class="scrollable-body">
+
+              <div class="settings-group">
+                <div class="settings-group-title">Theme Settings</div>
+                <div class="settings-list">
+                  <div class="settings-row" onclick="toggleDarkTheme()">
+                    <div class="settings-row-left">
+                      <i data-lucide="moon"></i>
+                      <div>
+                        <div class="settings-row-label">Dark Theme Layout</div>
+                        <div class="settings-row-desc">Optimize for SCADA screen readability</div>
+                      </div>
+                    </div>
+                    <label class="switch" onclick="event.stopPropagation()">
+                      <input type="checkbox" id="theme-switch" onchange="toggleDarkTheme()">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-group">
+                <div class="settings-group-title">Notification Settings</div>
+                <div class="settings-list">
+                  <div class="settings-row">
+                    <div class="settings-row-left">
+                      <i data-lucide="bell-ring"></i>
+                      <div>
+                        <div class="settings-row-label">Push Notifications</div>
+                        <div class="settings-row-desc">Get critical device events instantly</div>
+                      </div>
+                    </div>
+                    <label class="switch" onclick="event.stopPropagation()">
+                      <input type="checkbox" checked id="push-switch">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                  <div class="settings-row">
+                    <div class="settings-row-left">
+                      <i data-lucide="volume-2"></i>
+                      <div>
+                        <div class="settings-row-label">Audible Critical Alarms</div>
+                        <div class="settings-row-desc">Play siren tone when tank level is critical</div>
+                      </div>
+                    </div>
+                    <label class="switch" onclick="event.stopPropagation()">
+                      <input type="checkbox" checked id="audio-switch">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-group">
+                <div class="settings-group-title">Platform Tuning</div>
+                <div class="settings-list">
+                  <div class="settings-row">
+                    <div class="settings-row-left">
+                      <i data-lucide="refresh-cw"></i>
+                      <div>
+                        <div class="settings-row-label">AWS Telemetry Refresh</div>
+                        <div class="settings-row-desc">Interval of virtual packet generator</div>
+                      </div>
+                    </div>
+                    <select class="filter-dropdown" style="width: auto; height: 32px; font-size:0.75rem; padding:0 8px;"
+                      id="refresh-interval-select" onchange="changeRefreshInterval()">
+                      <option value="3000">3 Seconds</option>
+                      <option value="5000" selected>5 Seconds</option>
+                      <option value="10000">10 Seconds</option>
+                    </select>
+                  </div>
+                  <div class="settings-row">
+                    <div class="settings-row-left">
+                      <i data-lucide="database"></i>
+                      <div>
+                        <div class="settings-row-label">Offline Local Database</div>
+                        <div class="settings-row-desc">Simulate local device data sync</div>
+                      </div>
+                    </div>
+                    <button class="export-btn" style="height:30px; padding:0 12px; margin:0;"
+                      onclick="clearLocalLogs()">Clear DB</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-group" style="margin-top: 30px;">
+                <button class="login-btn" style="background-color:var(--critical);" onclick="logoutUser()">
+                  Disconnect Session
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- BOTTOM NAVIGATION BAR (Flutter Material 3 compatible layout) -->
+          <nav class="bottom-nav">
+            <a href="#" class="bottom-nav-item active" onclick="switchTab(event, 'dashboard')">
+              <div class="nav-icon-container">
+                <i data-lucide="layout-dashboard"></i>
+              </div>
+              Dashboard
+            </a>
+            <a href="#" class="bottom-nav-item" onclick="switchTab(event, 'reports')">
+              <div class="nav-icon-container">
+                <i data-lucide="file-text"></i>
+              </div>
+              Reports
+            </a>
+            <a href="#" class="bottom-nav-item" onclick="switchTab(event, 'alerts')">
+              <div class="nav-icon-container">
+                <i data-lucide="bell-off"></i>
+              </div>
+              Alerts
+            </a>
+            <a href="#" class="bottom-nav-item" onclick="switchTab(event, 'settings')">
+              <div class="nav-icon-container">
+                <i data-lucide="settings"></i>
+              </div>
+              Settings
+            </a>
+          </nav>
+
+        </div>
+
+        <!-- TANK DETAILS SCREEN OVERLAY (Sliding pane) -->
+        <div class="overlay-screen" id="tank-details-overlay">
+          <div class="overlay-header">
+            <button class="back-btn" onclick="closeTankDetails()"><i data-lucide="arrow-left"></i></button>
+            <h3 id="overlay-tank-name">Main storage</h3>
+          </div>
+          <div class="scrollable-body" style="padding:0;">
+
+            <div class="hero-tank-section">
+              <div class="hero-tank-container">
+                <div class="hero-tank-liquid" id="overlay-tank-fill"></div>
+                <div class="hero-tank-percentage" id="overlay-tank-pct">50%</div>
+              </div>
+              <div class="metrics-grid-3">
+                <div class="metric-tile">
+                  <h5>Current Volume</h5>
+                  <p id="overlay-vol">7,500 L</p>
+                </div>
+                <div class="metric-tile">
+                  <h5>Capacity</h5>
+                  <p id="overlay-capacity">10,000 L</p>
+                </div>
+                <div class="metric-tile">
+                  <h5>Liquid Height</h5>
+                  <p id="overlay-depth">3.2 m</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 16px;">
+              <div class="section-title">
+                <h3>Historical Telemetry</h3>
+                <div class="chip-group" style="margin-bottom: 0;">
+                  <span class="chip active" style="padding: 3px 8px; font-size:0.65rem;"
+                    onclick="changeDetailTimeframe(this, '24h')">24H</span>
+                  <span class="chip" style="padding: 3px 8px; font-size:0.65rem;"
+                    onclick="changeDetailTimeframe(this, '7d')">7D</span>
+                  <span class="chip" style="padding: 3px 8px; font-size:0.65rem;"
+                    onclick="changeDetailTimeframe(this, '30d')">30D</span>
+                </div>
+              </div>
+
+              <div class="dashboard-card" style="margin-top: 10px;">
+                <h4>Water Level Trend (%)</h4>
+                <div class="chart-container">
+                  <canvas id="detailLevelChart"></canvas>
+                </div>
+              </div>
+
+              <div class="dashboard-card">
+                <h4>Consumption Rate (L/Hour)</h4>
+                <div class="chart-container">
+                  <canvas id="detailConsumptionChart"></canvas>
+                </div>
+              </div>
+
+              <div class="section-title">
+                <h3>ESP32 Hardware Diagnostics</h3>
+              </div>
+              <div class="dashboard-card" style="margin-bottom:40px;">
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">Device Status</span>
+                  <span class="hardware-spec-val" id="overlay-dev-status">ONLINE</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">AWS Core Connection</span>
+                  <span class="hardware-spec-val" style="color:var(--success)" id="overlay-dev-aws">ACTIVE</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">MQTT Telemetry Topic</span>
+                  <span class="hardware-spec-val" id="overlay-dev-topic">mit/adt/node_1</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">WiFi RSSI Signal</span>
+                  <span class="hardware-spec-val" id="overlay-dev-rssi">-65 dBm</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">ESP32 Battery Level</span>
+                  <span class="hardware-spec-val" id="overlay-dev-battery">3.88V (Optimal)</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">Firmware Version</span>
+                  <span class="hardware-spec-val" id="overlay-dev-fw">v1.3.6-stable</span>
+                </div>
+                <div class="hardware-spec-row">
+                  <span class="hardware-spec-label">Last Transmission</span>
+                  <span class="hardware-spec-val" id="overlay-dev-time">10:45:12 AM</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATION CENTER OVERLAY PANEL -->
+        <div class="notification-panel" id="notifications-panel">
+          <div class="notification-panel-header">
+            <h4>System Notifications</h4>
+            <button class="clear-all-btn" onclick="clearAllNotifications()">Clear All</button>
+          </div>
+          <div class="notification-list-body" id="notifications-list">
+            <!-- Dynamic Notification Feed items -->
+          </div>
+        </div>
+
+        <!-- PROFILE SHEET OVERLAY PANEL (Simple slide-over) -->
+        <div class="overlay-screen" id="profile-overlay">
+          <div class="overlay-header">
+            <button class="back-btn" onclick="closeProfile()"><i data-lucide="arrow-left"></i></button>
+            <h3>Operator Profile</h3>
+          </div>
+          <div class="scrollable-body" style="padding:20px;">
+            <div
+              style="display:flex; flex-direction:column; align-items:center; margin-bottom:24px; text-align:center;">
+              <div class="avatar"
+                style="width: 80px; height: 80px; border-width: 4px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; background-color:var(--primary-light); color:var(--primary);">
+                <i data-lucide="user" style="width: 40px; height: 40px;"></i>
+              </div>
+              <h3 style="color:var(--text-main); font-weight:800; font-size:1.2rem;" id="prof-user-name">Dr. Marcus
+                Vance</h3>
+              <p style="color:var(--text-muted); font-size:0.8rem; font-weight:500;">Director of Utilities & Operations
+              </p>
+            </div>
+
+            <div class="dashboard-card" style="padding:16px;">
+              <h4 style="margin-bottom:12px;">Authentication Identity</h4>
+              <div class="hardware-spec-row">
+                <span class="hardware-spec-label">Operator login ID</span>
+                <span class="hardware-spec-val">admin@mit.edu</span>
+              </div>
+              <div class="hardware-spec-row">
+                <span class="hardware-spec-label">Security Role</span>
+                <span class="hardware-spec-val">Lead Facility Admin</span>
+              </div>
+              <div class="hardware-spec-row">
+                <span class="hardware-spec-label">Assigned Campus</span>
+                <span class="hardware-spec-val">MIT ADT University (Primary)</span>
+              </div>
+              <div class="hardware-spec-row">
+                <span class="hardware-spec-label">Last Log Session</span>
+                <span class="hardware-spec-val" id="profile-last-login">Today, 11:10 AM</span>
+              </div>
+            </div>
+
+            <div class="dashboard-card" style="padding:16px;">
+              <h4 style="margin-bottom:12px;">Quick Operations</h4>
+              <button class="export-btn" style="width:100%; margin-bottom:10px; height:40px;"
+                onclick="triggerToast('Edit Profile functionality simulated.')">
+                <i data-lucide="edit-2" style="width:14px;height:14px;"></i> Modify Account Profile
+              </button>
+              <button class="export-btn" style="width:100%; height:40px;"
+                onclick="triggerToast('Password Change sequence triggered.')">
+                <i data-lucide="key" style="width:14px;height:14px;"></i> Update Security Credentials
+              </button>
+            </div>
+
+            <button class="login-btn" style="background-color:var(--critical); margin-top:12px;" onclick="logoutUser()">
+              Secure Logout
+            </button>
+          </div>
+        </div>
+
+        <!-- Global Toast Container inside Simulator -->
+        <div class="toast-msg" id="global-toast">
+          Report Export Initiated...
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Main Logic Script -->
+  <script src="app.js"></script>
+</body>
+
+</html>

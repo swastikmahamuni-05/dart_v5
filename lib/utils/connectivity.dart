@@ -1,0 +1,5 @@
+import 'connectivity_stub.dart'
+    if (dart.library.html) 'connectivity_web.dart'
+    if (dart.library.io) 'connectivity_io.dart';
+
+Future<bool> checkInternet() => hasInternetConnection();
